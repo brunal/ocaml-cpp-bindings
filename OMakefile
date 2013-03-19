@@ -1,0 +1,29 @@
+.PHONY: all clean
+
+.SUBDIRS: rectangle_lib
+
+
+CFLAGS += -I$(shell $(OCAMLC) -where)
+# INCLUDES += 
+# OCAMLFLAGS    +=
+# OCAMLCFLAGS   +=
+# OCAMLOPTFLAGS +=
+# OCAML_LINK_FLAGS +=
+# OCAML_BYTE_LINK_FLAGS +=
+# OCAML_NATIVE_LINK_FLAGS +=
+
+StaticCLibrary(libbindings, bindings_cpp)
+OCamlLibrary(libbindings, bindings_caml)
+
+# cf. http://www.camlcity.org/knowledge/kb_001_omake_recipes.html#stublibs
+g++ -c -o bindings_cpp$(EXT_OBJ) bindings_cpp.cpp $(CFLAGS)
+ocamlmklib -custom -o bindings bindings_caml.ml bindings_cpp$(EXT_OBJ) \
+	$(OCAML_NATIVE_LINK_FLAGS) $(OCAML_LINK_FLAGS)
+
+OCAML_LINK_FLAGS += -cclib -lstdc++ -cclib -lrectangle -ccopt -Lrectangle_lib
+OCAML_LIBS += bindings
+
+.DEFAULT: $(OCamlProgram test_binding, caml_code)
+
+clean:
+	rm *.cm* *.a *.o test_binding.opt

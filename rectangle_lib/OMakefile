@@ -1,0 +1,7 @@
+LIBFILES[] = rectangle
+LIB = librectangle
+
+.DEFAULT: $(StaticCLibrary $(LIB), $(LIBFILES))
+
+clean:
+	rm *.a *.o
