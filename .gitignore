@@ -25,3 +25,8 @@
 *.cmx
 *.cmxs
 *.cmxa
+
+### OMake ###
+.omakedb
+.omakedb.lock
+*.omc
